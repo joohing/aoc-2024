@@ -64,6 +64,11 @@ win n xs
     | length xs < n = []
     | otherwise = take n xs : win n (tail xs)
 
+-- All sublists of size n of xs - incomplete
+sublists :: Int -> [Int] -> [[Int]]
+sublists _ [] = []
+sublists n (x:xs) = [x:ss | ss <- sublists (n - 1) xs] ++ sublists n xs
+
 -- Map to runs of unique elements, i.e. [1, 1, 2, 1, 3, 4] becomes [1, 2, 1, 3, 4]
 to_run :: (Eq a) => a -> [a] -> [a]
 to_run p xs = case xs of
