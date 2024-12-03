@@ -69,3 +69,12 @@ to_run :: (Eq a) => a -> [a] -> [a]
 to_run p xs = case xs of
     [] -> []
     x:xs -> if x == p then to_run p xs else x:(to_run x xs)
+
+-- Powerset of xs
+powerset :: [a] -> [[a]]
+powerset [] = [[]]
+powerset (x:xs) = [x:ps | ps <- powerset xs] ++ powerset xs
+
+-- Subsets of size n of list xs
+subsets :: Int -> [a] -> [[a]]
+subsets n xs = filter (\l -> length l == n) (powerset xs)
