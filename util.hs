@@ -78,3 +78,24 @@ powerset (x:xs) = [x:ps | ps <- powerset xs] ++ powerset xs
 -- Subsets of size n of list xs
 subsets :: Int -> [a] -> [[a]]
 subsets n xs = filter (\l -> length l == n) (powerset xs)
+
+-- Index of the first occurence of ele in list of ele, 1-indexed
+idxof :: (Eq a) => a -> [a] -> Int
+idxof _ [] = -1
+idxof e (x:xs) = if e == x then 1 else 1 + idxof e xs
+
+-- Unnecessary but self-documenting and convenient
+drop_till :: Char -> String -> String
+drop_till = \c str -> dropWhile (/= c) str
+
+get_till :: Char -> String -> String
+get_till = \c str -> takeWhile (/= c) str
+
+rint :: String -> Int
+rint = \str -> read str :: Int
+
+-- Find the substring and return everything after, or empty if not found
+get_after :: (Eq a) => [a] -> [a] -> [a]
+get_after _ [] = []
+get_after [] xs = xs
+get_after es xs = if es == (take (length es) xs) then (drop (length es) $ xs) else get_after es (drop 1 xs)

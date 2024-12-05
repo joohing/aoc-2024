@@ -1,0 +1,45 @@
+import Data.List
+import Data.Char
+import System.IO
+import Debug.Trace
+import Util
+
+-- I solve this task by modelling a "state machine" of sorts that passes the string around to different states.
+-- The first is "match_mul" which tries to find 'mul(d[dd], d[dd])' instructions
+match_mul :: String -> [(Int, Int)]
+match_mul str
+    | "mul(" == take 4 str = (match_nums $ take 7 (drop 4 str)) ++ (match_mul (drop 1 str))
+    | null str = []
+    | otherwise = match_mul (tail str)
+
+-- Next up is where we see whether the paren on the other side is legit, and
+-- send back nums if so
+match_nums :: String -> [(Int, Int)]
+match_nums str
+    | val = (rint fst, rint snd):[]
+    | otherwise = []
+    where
+        fst = get_till ',' str
+        snd = get_till ')' $ drop 1 (drop_till ',' str)
+        val = (all isDigit $ fst ++ snd)
+            && 1 <= length fst && length fst <= 3
+            && 1 <= length snd && length snd <= 3
+
+-- Iter through touples and sum them up
+mul :: [(Int, Int)] -> Int
+mul [] = 0
+mul (x:xs) = fst x * snd x + mul xs
+
+task1 input = do
+    handle <- openFile input ReadMode
+    contents <- hGetContents handle
+    print ("Task 1 result: " ++ show . mul . match_mul (contents))
+
+task2 input = do
+    handle <- openFile input ReadMode
+    contents <- hGetContents handle
+    print ("Task 2 result: not done")
+
+main = do
+    task1 "input/day3-sample.txt"
+    task2 "input/day3-sample.txt"
