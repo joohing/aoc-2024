@@ -59,10 +59,10 @@ get_fir_last str = fir_last $ map (split ' ') $ split '\n' str
 get_cols str = non_empty $ map (split ' ') $ split '\n' str
 
 -- Sliding window of size n
-win :: Int -> [Int] -> [[Int]]
-win n xs = case xs of
-    [] -> []
-    otherwise -> take n xs : win n (tail xs)
+win :: Int -> [a] -> [[a]]
+win n xs
+    | length xs < n = []
+    | otherwise = take n xs : win n (tail xs)
 
 -- Map to runs of unique elements, i.e. [1, 1, 2, 1, 3, 4] becomes [1, 2, 1, 3, 4]
 to_run :: (Eq a) => a -> [a] -> [a]
