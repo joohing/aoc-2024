@@ -30,14 +30,14 @@ fixable xs = any is_safe (subsets (length xs - 1) xs)
 task1 input = do
     handle <- openFile input ReadMode
     contents <- hGetContents handle
-    let nums = map to_num $ get_cols contents
+    let nums = map to_num $ get_cols ' ' contents
     let result = map is_safe nums
     print ("Task 1 result: " ++ show (count True result))
 
 task2 input = do
     handle <- openFile input ReadMode
     contents <- hGetContents handle
-    let nums = map to_num $ get_cols contents
+    let nums = map to_num $ get_cols ' ' contents
     let result = map fixable nums
     print ("Task 2 result: " ++ show (count True result))
 

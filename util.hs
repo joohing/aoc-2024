@@ -56,7 +56,7 @@ split c str = case str of
 get_fir_last str = fir_last $ map (split ' ') $ split '\n' str
 
 -- For when you have an input with any count of columns
-get_cols str = non_empty $ map (split ' ') $ split '\n' str
+get_cols c str = non_empty $ map (split c) $ split '\n' str
 
 -- Sliding window of size n
 win :: Int -> [a] -> [[a]]
@@ -87,7 +87,12 @@ subsets n xs = filter (\l -> length l == n) (powerset xs)
 -- Index of the first occurence of ele in list of ele, 1-indexed
 idxof :: (Eq a) => a -> [a] -> Int
 idxof _ [] = -1
-idxof e (x:xs) = if e == x then 1 else 1 + idxof e xs
+idxof e (x:xs)
+    | e == x = 0
+    | found /= -1 = 1 + found
+    | otherwise = -1
+    where
+        found = idxof e xs
 
 -- Unnecessary but self-documenting and convenient
 drop_till :: Char -> String -> String
@@ -104,3 +109,17 @@ get_after :: (Eq a) => [a] -> [a] -> [a]
 get_after _ [] = []
 get_after [] xs = xs
 get_after es xs = if es == (take (length es) xs) then (drop (length es) $ xs) else get_after es (drop 1 xs)
+
+-- Swap the two indeces. Scuffed ass stackoverflow solution
+swap :: Int -> Int -> [a] -> [a]
+swap 0 0 xs = xs
+swap a b xs =
+    let ei = xs !! i
+        ej = xs !! j
+        left = take i xs
+        middle = take (j - i - 1) $ drop (i + 1) xs
+        right = drop (j + 1) xs
+    in left ++ [ej] ++ middle ++ [ei] ++ right
+    where
+        i = min a b
+        j = max a b
